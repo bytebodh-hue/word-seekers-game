@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Word Seekers: Word Search Puzzle Game</title>
+  <meta name="description" content="Find hidden words in 8 directions across 100 levels. Daily Challenge, stars and streaks. Works offline, no ads, no tracking.">
+  <meta property="og:title" content="Word Seekers">
+  <meta property="og:description" content="Find the Words. Challenge Your Mind.">
+  <meta property="og:image" content="/images/icon.png">
+  <meta name="theme-color" content="#060B1F">
+  <link rel="icon" href="/images/icon.png">
+  <link rel="apple-touch-icon" href="/images/icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy-top: #0E1A3A; --navy: #060B1F; --surface: #15234A; --raised: #1C2D5C;
+      --border: rgba(130,170,255,.14); --tile: #1E3163; --text: #F3F7FF; --muted: #A9B8DC;
+      --accent: #2EE6D6; --accent-ink: #03201F; --reward: #FFD25A;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Nunito', system-ui, sans-serif; color: var(--text); line-height: 1.6;
+      background: linear-gradient(160deg, var(--navy-top), var(--navy) 60%) fixed; min-height: 100vh;
+    }
+    a { color: var(--accent); }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
+    nav .brand { display: flex; align-items: center; gap: 10px; font-family: 'Fredoka'; font-weight: 700; font-size: 20px; color: var(--text); text-decoration: none; }
+    nav .brand img { width: 36px; height: 36px; border-radius: 9px; }
+    nav .links a { color: var(--muted); text-decoration: none; margin-left: 20px; font-weight: 800; font-size: 15px; }
+    nav .links a:hover { color: var(--text); }
+
+    .hero { text-align: center; padding: 56px 0 40px; }
+    .logo { display: inline-flex; gap: 10px; padding: 8px; border-radius: 999px; border: 2px solid var(--accent); background: rgba(46,230,214,.25); }
+    .logo span { width: 64px; height: 64px; border-radius: 16px; background: var(--tile); display: grid; place-items: center; font-family: 'Fredoka'; font-weight: 700; font-size: 36px; border: 1px solid rgba(160,200,255,.12); }
+    .seekers { font-family: 'Fredoka'; font-weight: 700; font-size: clamp(48px, 9vw, 76px); color: var(--accent); letter-spacing: 4px; line-height: 1.1; margin-top: 10px; }
+    .tagline { color: var(--muted); font-size: 20px; margin-top: 10px; }
+    .badge { display: inline-flex; align-items: center; gap: 10px; margin-top: 32px; padding: 14px 28px; border-radius: 16px; background: var(--accent); color: var(--accent-ink); font-weight: 800; font-size: 18px; text-decoration: none; box-shadow: 0 10px 30px rgba(46,230,214,.25); }
+    .badge:hover { transform: translateY(-1px); }
+    .note { color: var(--muted); font-size: 14px; margin-top: 12px; }
+
+    .shots { display: flex; justify-content: center; gap: 24px; padding: 32px 0 16px; flex-wrap: wrap; }
+    .shots img { width: min(260px, 80vw); border-radius: 32px; border: 1px solid var(--border); box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+    .shots img:nth-child(2) { transform: translateY(-24px); }
+
+    h2 { font-family: 'Fredoka'; font-weight: 700; font-size: 34px; text-align: center; margin: 64px 0 28px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 24px; }
+    .card .icon { width: 44px; height: 44px; border-radius: 12px; background: var(--raised); display: grid; place-items: center; font-size: 22px; margin-bottom: 14px; }
+    .card h3 { font-family: 'Fredoka'; font-weight: 600; font-size: 20px; margin-bottom: 6px; }
+    .card p { color: var(--muted); font-size: 15px; }
+
+    .privacy { text-align: center; background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 36px 24px; margin-top: 64px; }
+    .privacy h2 { margin: 0 0 12px; }
+    .privacy p { color: var(--muted); max-width: 620px; margin: 0 auto; }
+    .pills { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 20px; }
+    .pills span { background: var(--raised); border: 1px solid var(--border); padding: 8px 16px; border-radius: 999px; font-weight: 800; font-size: 14px; }
+
+    #support .card { text-align: center; max-width: 640px; margin: 0 auto; }
+    #support .card p { margin-top: 8px; }
+    .faq { max-width: 720px; margin: 28px auto 0; }
+    .faq details { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px 20px; margin-bottom: 12px; }
+    .faq summary { cursor: pointer; font-weight: 800; }
+    .faq details p { color: var(--muted); margin-top: 10px; font-size: 15px; }
+
+    footer { text-align: center; color: var(--muted); font-size: 14px; padding: 56px 0 40px; }
+    footer a { margin: 0 10px; }
+    @media (max-width: 600px) {
+      .logo span { width: 50px; height: 50px; font-size: 28px; }
+      .shots img:nth-child(2) { transform: none; }
+      nav .links a { margin-left: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="/"><img src="/images/icon.png" alt="">Word Seekers</a>
+      <div class="links"><a href="#features">Features</a><a href="#support">Support</a><a href="/privacy">Privacy</a></div>
+    </nav>
+
+    <header class="hero">
+      <div class="logo" aria-label="Word"><span>W</span><span>O</span><span>R</span><span>D</span></div>
+      <h1 class="seekers">SEEKERS</h1>
+      <p class="tagline">Find the Words. Challenge Your Mind.</p>
+      <!-- Replace # with your App Store link after approval -->
+      <a class="badge" href="#">&#63743; Download on the App Store</a>
+      <p class="note">Free · iPhone · Works offline</p>
+    </header>
+
+    <section class="shots" aria-label="Screenshots">
+      <img src="/images/01-home.png" alt="Word Seekers home screen with level progress and Daily Challenge">
+      <img src="/images/02-gameplay.png" alt="A word search puzzle with found words highlighted">
+      <img src="/images/05-daily.png" alt="The Daily Challenge puzzle">
+    </section>
+
+    <section id="features">
+      <h2>Why players love it</h2>
+      <div class="grid">
+        <div class="card"><div class="icon">🧭</div><h3>8 directions</h3><p>Words hide across, down, diagonally and backwards. Your swipe snaps to a straight line.</p></div>
+        <div class="card"><div class="icon">🏆</div><h3>100 levels</h3><p>From a gentle 5 × 5 tutorial to 15 × 15 master grids, with difficulty that rises step by step.</p></div>
+        <div class="card"><div class="icon">📅</div><h3>Daily Challenge</h3><p>A fresh themed puzzle every day. Play on consecutive days to build your streak.</p></div>
+        <div class="card"><div class="icon">⭐</div><h3>Stars &amp; scores</h3><p>Find every word fast and without hints for three stars. Your best scores are saved.</p></div>
+        <div class="card"><div class="icon">💡</div><h3>Helpful hints</h3><p>Stuck? A hint shows exactly where a hidden word begins, then where it ends.</p></div>
+        <div class="card"><div class="icon">👀</div><h3>Easy on the eyes</h3><p>Large, clear letters, dark and light themes, and support for Reduce Motion.</p></div>
+      </div>
+    </section>
+
+    <section class="privacy">
+      <h2>Private by design</h2>
+      <p>No accounts, no ads and no tracking. Word Seekers works fully offline and keeps your progress on your device. You can export or delete your data anytime.</p>
+      <div class="pills"><span>No ads</span><span>No tracking</span><span>No data collected</span><span>Works offline</span></div>
+      <p style="margin-top:18px"><a href="/privacy">Read the privacy policy</a></p>
+    </section>
+
+    <section id="support">
+      <h2>Support</h2>
+      <div class="card">
+        <h3>Need help or have feedback?</h3>
+        <!-- Replace with your real support email -->
+        <p>Email us at <a href="mailto:support@example.com">support@example.com</a>. We usually reply within 2 business days.</p>
+      </div>
+      <div class="faq">
+        <details><summary>How do I select a word?</summary><p>Touch the first letter, drag to the last letter in a straight line, then lift your finger. Words can run in any of 8 directions, including backwards.</p></details>
+        <details><summary>How do I unlock more levels?</summary><p>Complete a level to unlock the next one. You can replay finished levels anytime from Select Level.</p></details>
+        <details><summary>How are stars earned?</summary><p>Finish within the target time without hints for 3 stars. Using one hint, or taking up to twice the target time, earns 2 stars. Any other completion earns 1 star.</p></details>
+        <details><summary>Will I lose my progress if I change phones?</summary><p>Progress is stored only on your device. Use Settings → Export My Data to save a copy of your data.</p></details>
+        <details><summary>How do I delete my data?</summary><p>Open Settings → Delete All Data. This permanently erases your name, progress and settings from the device. Uninstalling the app also removes it.</p></details>
+        <details><summary>Does the game need the internet?</summary><p>No. Word Seekers works completely offline.</p></details>
+      </div>
+    </section>
+
+    <footer>
+      <p><a href="/privacy">Privacy Policy</a><a href="#support">Support</a></p>
+      <!-- Replace with your name or company -->
+      <p style="margin-top:12px">© 2026 Your Name. All rights reserved.</p>
+    </footer>
+  </div>
+</body>
+</html>
